@@ -1,9 +1,3 @@
 {
-  "buildCommand": "python scripts/build_vercel.py",
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/app.py" },
-    { "src": "/health", "dest": "/app.py" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "buildCommand": "python scripts/build_vercel.py"
 }

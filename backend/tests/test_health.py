@@ -7,7 +7,7 @@ def test_healthcheck(client: TestClient) -> None:
     assert response.json() == {"status": "healthy"}
 
 
-def test_root_redirects_to_frontend(client: TestClient) -> None:
-    response = client.get("/", follow_redirects=False)
-    assert response.status_code == 307
-    assert response.headers["location"] == "/index.html"
+def test_root_serves_frontend(client: TestClient) -> None:
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
