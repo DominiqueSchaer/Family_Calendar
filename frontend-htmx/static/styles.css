@@ -7,3 +7,11 @@
     @apply bg-slate-100 text-slate-900;
   }
 }
+
+@layer components {
+  @media (max-width: 639px) {
+    #calendar-grid {
+      @apply -mx-1;
+    }
+  }
+}

@@ -33,37 +33,37 @@
     </style>
   </head>
   <body>
-    <main class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-6 py-12">
-      <section class="space-y-10">
-        <header class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+    <main class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 px-3 py-4 sm:gap-6 sm:px-6 sm:py-10">
+      <section class="space-y-6 sm:space-y-10">
+        <header class="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
           <div class="space-y-2">
-            <h1 id="resource-title" class="text-3xl font-semibold">Loading.</h1>
-            <p class="text-sm text-slate-600">Shared calendar for the Riederalp.</p>
+            <h1 id="resource-title" class="text-2xl font-semibold sm:text-3xl">Loading.</h1>
+            <p class="text-xs text-slate-600 sm:text-sm">Shared calendar for the Riederalp.</p>
             <p id="calendar-updated" class="text-xs text-slate-400">Checking availability.</p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm sm:px-4 sm:py-3">
               <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Next open date</p>
               <p id="calendar-next-open" class="text-sm font-semibold text-slate-700">—</p>
             </div>
           </div>
         </header>
 
-        <section class="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-          <article class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <section class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:gap-6">
+          <article class="space-y-4 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:space-y-6 sm:p-6">
+            <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <h2 class="text-xl font-semibold text-slate-900">Availability</h2>
-                <p id="calendar-month-label" class="text-sm text-slate-500">—</p>
+                <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">Availability</h2>
+                <p id="calendar-month-label" class="text-xs text-slate-500 sm:text-sm">—</p>
               </div>
-              <div class="flex flex-wrap items-center gap-2">
-                <button class="inline-flex items-center rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600" type="button" data-calendar-action="prev">&#8592; Prev</button>
-                <button class="inline-flex items-center rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600" type="button" data-calendar-action="today">Today</button>
-                <button class="inline-flex items-center rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600" type="button" data-calendar-action="next">Next &#8594;</button>
+              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <button class="inline-flex items-center rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600 sm:px-3 sm:py-1.5 sm:text-sm" type="button" data-calendar-action="prev">&#8592; Prev</button>
+                <button class="inline-flex items-center rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600 sm:px-3 sm:py-1.5 sm:text-sm" type="button" data-calendar-action="today">Today</button>
+                <button class="inline-flex items-center rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-600 transition hover:border-indigo-300 hover:text-indigo-600 sm:px-3 sm:py-1.5 sm:text-sm" type="button" data-calendar-action="next">Next &#8594;</button>
               </div>
             </header>
 
-            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500 sm:gap-4 sm:text-xs">
               <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Available</span>
               <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-indigo-500"></span>Booked</span>
               <span class="inline-flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Awaiting approval</span>
@@ -74,17 +74,17 @@
             </div>
           </article>
 
-          <div class="space-y-6">
-            <article id="selected-day-panel" class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div class="space-y-4 sm:space-y-6">
+            <article id="selected-day-panel" class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <div id="day-action-status" class="hidden mb-4 rounded-md border px-3 py-2 text-sm"></div>
               <div id="selected-day-content" class="space-y-4 text-sm text-slate-600">
                 <p class="text-sm text-slate-500">Pick a day in the calendar to see more information.</p>
               </div>
             </article>
 
-            <article class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <header class="space-y-2">
-                <h2 class="text-xl font-semibold text-slate-900">New request</h2>
+                <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">New request</h2>
                 <p class="text-sm text-slate-500">Share details to add a booking to the calendar.</p>
               </header>
               <div id="new-request-status" class="mt-4 hidden rounded-md border px-3 py-2 text-sm"></div>
@@ -436,42 +436,42 @@
         const container = document.getElementById('calendar-grid');
         if (!container) return;
         const labels = calendar.weekdayLabels.length > 0 ? calendar.weekdayLabels : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const header = `<div class="grid grid-cols-7 gap-1 text-xs font-medium uppercase tracking-wide text-slate-500">${labels.map((l) => `<span class="px-2 py-1 text-center">${l}</span>`).join('')}</div>`;
+        const header = `<div class="grid grid-cols-7 gap-0.5 text-[10px] font-medium uppercase tracking-tight text-slate-500 sm:gap-1 sm:text-xs sm:tracking-wide">${labels.map((l) => `<span class="px-0.5 py-1 text-center sm:px-2">${l.slice(0, 2)}<span class="hidden sm:inline">${l.slice(2)}</span></span>`).join('')}</div>`;
         const weeks = calendar.weeks.map((week) => {
           const days = week.map((day) => {
             const hasBookings = day.bookings.length > 0;
             const isSelected = calendar.selectedIso === day.iso;
             const disabled = Boolean(day.isUnavailable);
             const classes = [
-              'group flex h-28 flex-col justify-between rounded-lg border p-3 text-left text-sm shadow-sm transition hover:border-indigo-300 hover:shadow',
+              'group flex min-h-[5.75rem] flex-col justify-between rounded-md border p-1.5 text-left text-[10px] shadow-sm transition hover:border-indigo-300 hover:shadow sm:h-28 sm:rounded-lg sm:p-3 sm:text-sm',
               statusClassForDay(day),
               day.isCurrentMonth === false ? 'opacity-60' : '',
               isSelected ? 'ring-2 ring-indigo-500 border-indigo-500' : '',
               disabled ? 'cursor-not-allowed opacity-60' : '',
             ].filter(Boolean).join(' ');
             const bookingsList = hasBookings
-              ? `<ul class="space-y-1">${day.bookings.slice(0, 3).map((booking) => {
+              ? `<ul class="space-y-0.5 sm:space-y-1">${day.bookings.slice(0, 2).map((booking) => {
                   const statusClass = ({ approved:'bg-emerald-100 text-emerald-700', confirmed:'bg-emerald-100 text-emerald-700', pending:'bg-amber-100 text-amber-700', declined:'bg-rose-100 text-rose-700', rejected:'bg-rose-100 text-rose-700' }[booking.status]) ?? 'bg-indigo-100 text-indigo-700';
-                  return `<li class="flex items-center rounded-md px-2 py-1 text-xs font-semibold ${statusClass}"><span class="truncate">${booking.customerName}</span></li>`;
-                }).join('')}</ul>${day.bookings.length > 3 ? `<p class="text-[11px] text-slate-500">+${day.bookings.length - 3} more</p>` : ''}`
+                  return `<li class="calendar-booking-chip flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold leading-tight sm:px-2 sm:py-1 sm:text-xs ${statusClass}"><span class="truncate">${booking.customerName}</span></li>`;
+                }).join('')}</ul>${day.bookings.length > 2 ? `<p class="text-[10px] text-slate-500 sm:text-[11px]">+${day.bookings.length - 2} more</p>` : ''}`
               : '';
             let statusMessage = '';
-            if (day.isUnavailable) statusMessage = '<p class="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">Unavailable</p>';
-            else if (!hasBookings) statusMessage = '<p class="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600">Free</p>';
-            else if (day.isFull) statusMessage = '<p class="rounded-md bg-rose-100 px-2 py-1 text-[11px] font-semibold text-rose-700">Fully booked</p>';
+            if (day.isUnavailable) statusMessage = '<p class="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-slate-600 sm:px-2 sm:py-1 sm:text-[11px]">Unavailable</p>';
+            else if (!hasBookings) statusMessage = '<p class="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-slate-600 sm:px-2 sm:py-1 sm:text-[11px]">Free</p>';
+            else if (day.isFull) statusMessage = '<p class="rounded-md bg-rose-100 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-rose-700 sm:px-2 sm:py-1 sm:text-[11px]">Fully booked</p>';
 
             return `<button type="button" class="${classes}" data-date="${day.iso}" ${disabled ? 'disabled' : ''} ${isSelected ? 'aria-current="date"' : ''}>
-              <div class="flex items-start justify-between gap-2">
-                <span class="text-base font-semibold">${day.dayLabel ?? day.dayNumber ?? day.iso.split('-').at(-1)}</span>
-                ${day.isToday ? '<span class="rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600">Today</span>' : ''}
+              <div class="flex items-start justify-between gap-1 sm:gap-2">
+                <span class="text-sm font-semibold sm:text-base">${day.dayLabel ?? day.dayNumber ?? day.iso.split('-').at(-1)}</span>
+                ${day.isToday ? '<span class="mt-1 h-2 w-2 rounded-full bg-indigo-500 sm:hidden"></span><span class="hidden rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600 sm:inline-flex">Today</span>' : ''}
               </div>
-              <div class="space-y-1 text-xs">
+              <div class="space-y-0.5 text-[10px] sm:space-y-1 sm:text-xs">
                 ${bookingsList}
                 ${statusMessage}
               </div>
             </button>`;
           }).join('');
-          return `<div class="grid grid-cols-7 gap-1">${days}</div>`;
+          return `<div class="grid grid-cols-7 gap-0.5 sm:gap-1">${days}</div>`;
         }).join('');
         container.innerHTML = `${header}${weeks}`;
         container.querySelectorAll('button[data-date]').forEach((button) => {
