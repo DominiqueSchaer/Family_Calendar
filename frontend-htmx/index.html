@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="api-base" content="https://bookly-v.vercel.app" />
+    <meta name="api-base" content="" />
     <title>Shared Resource Calendar</title>
     <link rel="stylesheet" href="static/output.css" />
     <script src="https://unpkg.com/htmx.org@1.9.10" crossorigin="anonymous"></script>
@@ -330,7 +330,6 @@
       }
 
       async function api(path, options) {
-        if (!apiBase) throw new Error('No API base configured.');
         const response = await fetch(`${apiBase}${path}`, { headers: { 'Content-Type': 'application/json' }, ...options });
         if (!response.ok) {
           let message = `Request failed with ${response.status}`;

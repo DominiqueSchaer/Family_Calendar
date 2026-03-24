@@ -2,12 +2,12 @@
 
 Bookly couples a FastAPI backend with a lightweight, standalone HTMX + Tailwind frontend for managing reservations on a shared resource. The frontend ships as a single HTML file that can be opened directly in the browser after compiling Tailwind.
 
-This repo is wired for a simple split deployment: FastAPI runs on Vercel as a standard serverless function, while the HTMX frontend stays a standalone static site.
+This repo is wired for a simple split deployment: FastAPI runs on Vercel from the root `app.py` entrypoint, while static assets are served from `public/`.
 
 ## Project Layout
 
 ```
-app.py                 # Vercel FastAPI entrypoint
+app.py                 # Vercel and local FastAPI entrypoint
 backend/
   app/
     main.py
@@ -16,12 +16,16 @@ backend/
     routers/
   migrations/
 frontend-htmx/
-  index.html           # fully rendered calendar UI with inline logic
+  index.html           # source HTML for the static frontend
+  index_approval.html
   static/
     styles.css         # Tailwind entrypoint
     output.css         # compiled stylesheet (generated)
-scripts/
-  ...                  # optional local helpers
+public/
+  index.html           # deployed static frontend
+  index_approval.html
+  static/
+    output.css
 ```
 
 ## Backend (FastAPI)
@@ -37,7 +41,7 @@ scripts/
    ```
 4. Run the API:
    ```bash
-   uvicorn backend.app.main:app --reload --port 8000
+   uvicorn app:app --reload --port 8000
    ```
 
 ## Frontend (HTMX + Tailwind)
@@ -49,8 +53,8 @@ scripts/
    npm run build:css # or npm run dev:css for watch mode
    ```
 2. Open `frontend-htmx/index.html` in your browser. The page will:
-   - Read the backend base URL from `<meta name="api-base">` (defaults to `https://bookly-v.vercel.app`).
-   - Allow overriding the backend with `?apiBase=http://localhost:8000` or `localStorage.setItem('bookly.apiBase', 'http://localhost:8000')`.
+   - Use same-origin API routes by default when deployed on Vercel.
+   - Allow overriding the backend with `?apiBase=http://127.0.0.1:8000` or `localStorage.setItem('bookly.apiBase', 'http://127.0.0.1:8000')` for local debugging.
    - Fetch live data from the FastAPI API if available.
    - Fall back to inlined mock data so you can explore the UI without the backend running.
 3. Update `static/styles.css` and re-run `npm run build:css` whenever you change styles.
@@ -69,6 +73,6 @@ Before opening a PR run:
 
 1. Create a Vercel project pointed at this repository.
 2. Set `DATABASE_URL` in the Vercel environment settings.
-3. Deploy. Vercel will detect `app.py` as the Python serverless entrypoint.
+3. Deploy. Vercel can detect the root `app.py` entrypoint without additional routing configuration.
 
-The deployed API base will be `https://<your-project>.vercel.app`. Because the frontend is now fully static, it can live on GitHub Pages, any static host, or be opened locally while talking to the Vercel backend.
+The deployed API and frontend share the same origin at `https://<your-project>.vercel.app`, so the frontend can call `/health`, `/bookings`, and the other FastAPI routes directly.

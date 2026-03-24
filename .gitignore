@@ -12,7 +12,6 @@ backend/migrations/versions/*.py
 
 # Node
 frontend-htmx/node_modules/
-public/
 
 # OS
 .DS_Store
