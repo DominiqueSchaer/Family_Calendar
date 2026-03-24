@@ -2,13 +2,12 @@
 
 Bookly couples a FastAPI backend with a lightweight, standalone HTMX + Tailwind frontend for managing reservations on a shared resource. The frontend ships as a single HTML file that can be opened directly in the browser after compiling Tailwind.
 
-This repo is wired for a simple split deployment: FastAPI runs on Vercel as serverless functions, while the HTMX frontend stays a standalone static site.
+This repo is wired for a simple split deployment: FastAPI runs on Vercel as a standard serverless function, while the HTMX frontend stays a standalone static site.
 
 ## Project Layout
 
 ```
-api/
-  index.py             # Vercel FastAPI entrypoint
+app.py                 # Vercel FastAPI entrypoint
 backend/
   app/
     main.py
@@ -50,7 +49,7 @@ scripts/
    npm run build:css # or npm run dev:css for watch mode
    ```
 2. Open `frontend-htmx/index.html` in your browser. The page will:
-   - Read the backend base URL from `<meta name="api-base">` (defaults to `https://bookly-v.vercel.app/api`).
+   - Read the backend base URL from `<meta name="api-base">` (defaults to `https://bookly-v.vercel.app`).
    - Allow overriding the backend with `?apiBase=http://localhost:8000` or `localStorage.setItem('bookly.apiBase', 'http://localhost:8000')`.
    - Fetch live data from the FastAPI API if available.
    - Fall back to inlined mock data so you can explore the UI without the backend running.
@@ -70,6 +69,6 @@ Before opening a PR run:
 
 1. Create a Vercel project pointed at this repository.
 2. Set `DATABASE_URL` in the Vercel environment settings.
-3. Deploy. Vercel will detect `api/index.py` as the Python serverless entrypoint.
+3. Deploy. Vercel will detect `app.py` as the Python serverless entrypoint.
 
-The deployed API base will be `https://<your-project>.vercel.app/api`. Because the frontend is now fully static, it can live on GitHub Pages, any static host, or be opened locally while talking to the Vercel backend.
+The deployed API base will be `https://<your-project>.vercel.app`. Because the frontend is now fully static, it can live on GitHub Pages, any static host, or be opened locally while talking to the Vercel backend.
