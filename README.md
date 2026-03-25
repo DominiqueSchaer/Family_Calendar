@@ -2,14 +2,15 @@
 
 Bookly couples a FastAPI backend with a lightweight, standalone HTMX + Tailwind frontend for managing reservations on a shared resource. The frontend ships as a single HTML file that can be opened directly in the browser after compiling Tailwind.
 
-This repo is wired for a simple Vercel deployment: FastAPI runs from `api/index.py`, while static assets are served from `public/`.
+This repo is wired for a simple Vercel deployment: FastAPI is exposed from `app/index.py` and re-exported from `api/index.py`, while static assets are served from `public/`.
 
 ## Project Layout
 
 ```
 api/
-  index.py             # Vercel entrypoint
+  index.py             # Vercel API route entrypoint
 app/
+  index.py             # explicit Vercel FastAPI entrypoint
   main.py              # FastAPI application
   models.py
   schemas.py
@@ -75,7 +76,7 @@ Before opening a PR run:
 2. Set `DATABASE_URL` in the Vercel environment settings.
 3. Deploy. Vercel serves the static frontend from `public/` and the FastAPI function from `api/index.py`.
 
-The production dependency set is intentionally slimmed down for Vercel. Local-only tools such as `uvicorn` live in the `dev` extra, and the Python app now lives in a single `app/` package with `api/index.py` kept only as the Vercel entrypoint.
+The production dependency set is intentionally slimmed down for Vercel. Local-only tools such as `uvicorn` live in the `dev` extra, and the Python app now lives in a single `app/` package. Vercel is pointed at the FastAPI app explicitly through `[project.scripts]`.
 The app accepts either `postgresql+asyncpg://...` or common host-provided `postgres://...` and `postgresql://...` URLs for `DATABASE_URL`.
 
 The deployed frontend lives at `https://<your-project>.vercel.app/` and the API lives under `https://<your-project>.vercel.app/api/...`.
