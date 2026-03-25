@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from calendar import Calendar, monthrange
 from datetime import date, datetime, timedelta, timezone
@@ -69,7 +69,7 @@ async def _ensure_no_conflict(
 def _format_window_label(booking: models.Booking) -> str:
     if booking.start_at == booking.end_at:
         return booking.start_at.strftime("%a, %d %b %Y")
-    return f"{booking.start_at.strftime('%d %b %Y')} – {booking.end_at.strftime('%d %b %Y')}"
+    return f"{booking.start_at.strftime('%d %b %Y')} - {booking.end_at.strftime('%d %b %Y')}"
 
 
 def _booking_summary(booking: models.Booking) -> schemas.CalendarBookingSummary:

@@ -1,6 +1,7 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from datetime import date, datetime
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from .models import BookingStatus
@@ -140,5 +141,3 @@ class CalendarResponse(BaseModel):
     pending_requests: list[PendingRequestSummary] = Field(default_factory=list, alias="pendingRequests")
 
     model_config = ConfigDict(populate_by_name=True)
-
-

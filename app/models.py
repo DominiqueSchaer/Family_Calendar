@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import enum
 from datetime import date, datetime
@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from sqlalchemy import (
     DECIMAL,
+    CheckConstraint,
     Date,
     DateTime,
     Enum,
@@ -14,7 +15,6 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
-    CheckConstraint,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -53,7 +53,9 @@ class Booking(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id", ondelete="CASCADE"), nullable=False, index=True)
     resource_id: Mapped[str] = mapped_column(String(64), nullable=False, default="alder-lake-house")
-    status: Mapped[BookingStatus] = mapped_column(Enum(BookingStatus, name="booking_status"), nullable=False, default=BookingStatus.pending)
+    status: Mapped[BookingStatus] = mapped_column(
+        Enum(BookingStatus, name="booking_status"), nullable=False, default=BookingStatus.pending
+    )
 
     start_at: Mapped[date] = mapped_column(Date, nullable=False)
     end_at: Mapped[date] = mapped_column(Date, nullable=False)

@@ -1,21 +1,22 @@
-﻿# Bookly
+# Bookly
 
 Bookly couples a FastAPI backend with a lightweight, standalone HTMX + Tailwind frontend for managing reservations on a shared resource. The frontend ships as a single HTML file that can be opened directly in the browser after compiling Tailwind.
 
-This repo is wired for a simple split deployment: FastAPI runs on Vercel from `api/index.py`, while static assets are served from `public/`.
+This repo is wired for a simple Vercel deployment: FastAPI runs from `api/index.py`, while static assets are served from `public/`.
 
 ## Project Layout
 
 ```
 api/
-  index.py             # Vercel and local FastAPI entrypoint
-backend/
-  app/
-    main.py
-    models.py
-    schemas.py
-    routers/
-  migrations/
+  index.py             # Vercel entrypoint
+app/
+  main.py              # FastAPI application
+  models.py
+  schemas.py
+  routers/
+migrations/
+  versions/
+tests/
 frontend-htmx/
   index.html           # source HTML for the static frontend
   index_approval.html
@@ -40,9 +41,9 @@ public/
    ```bash
    alembic upgrade head
    ```
-4. Run the API:
+4. Run the API locally:
    ```bash
-   uvicorn api.index:app --reload --port 8000
+   uvicorn app.main:app --reload --port 8000
    ```
 
 ## Frontend (HTMX + Tailwind)
@@ -60,7 +61,7 @@ public/
    - Fall back to inlined mock data so you can explore the UI without the backend running.
 3. Update `static/styles.css` and re-run `npm run build:css` whenever you change styles.
 
-Because everything is either inlined or fetched via HTTPS at runtime, no dev server is required—refreshing `index.html` is enough to see changes after recompiling CSS.
+Because everything is either inlined or fetched via HTTPS at runtime, no dev server is required; refreshing `index.html` is enough to see changes after recompiling CSS.
 
 ## Quality Gates
 
@@ -75,5 +76,7 @@ Before opening a PR run:
 1. Create a Vercel project pointed at this repository.
 2. Set `DATABASE_URL` in the Vercel environment settings.
 3. Deploy. Vercel serves the static frontend from `public/` and the FastAPI function from `api/index.py`.
+
+The production dependency set is intentionally slimmed down for Vercel. Local-only tools such as `uvicorn` live in the `dev` extra, and the Python app now lives in a single `app/` package with `api/index.py` kept only as the Vercel entrypoint.
 
 The deployed frontend lives at `https://<your-project>.vercel.app/` and the API lives under `https://<your-project>.vercel.app/api/...`.

@@ -1,14 +1,15 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
+.tmp_*
 .venv/
 venv/
 .env
 
 # Alembic
-backend/migrations/versions/*.py
-!backend/migrations/versions/.keep
+migrations/versions/*.py
+!migrations/versions/.keep
 
 # Node
 frontend-htmx/node_modules/
