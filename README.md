@@ -54,7 +54,7 @@ public/
    npm run build:css # or npm run dev:css for watch mode
    ```
 2. Open `frontend-htmx/index.html` in your browser. The page will:
-   - Use `/api` as the backend base by default when deployed on Vercel.
+   - Use the site root as the backend base by default when deployed on Vercel.
    - Allow overriding the backend with `?apiBase=http://127.0.0.1:8000` or `localStorage.setItem('bookly.apiBase', 'http://127.0.0.1:8000')` for local debugging.
    - Fetch live data from the FastAPI API if available.
    - Fall back to inlined mock data so you can explore the UI without the backend running.
