@@ -19,13 +19,11 @@ migrations/
 tests/
 frontend-htmx/
   index.html           # source HTML for the static frontend
-  index_approval.html
   static/
     styles.css         # Tailwind entrypoint
     output.css         # compiled stylesheet (generated)
 public/
   index.html           # deployed static frontend
-  index_approval.html
   static/
     output.css
 ```
