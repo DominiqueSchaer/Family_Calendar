@@ -78,5 +78,6 @@ Before opening a PR run:
 3. Deploy. Vercel serves the static frontend from `public/` and the FastAPI function from `api/index.py`.
 
 The production dependency set is intentionally slimmed down for Vercel. Local-only tools such as `uvicorn` live in the `dev` extra, and the Python app now lives in a single `app/` package with `api/index.py` kept only as the Vercel entrypoint.
+The app accepts either `postgresql+asyncpg://...` or common host-provided `postgres://...` and `postgresql://...` URLs for `DATABASE_URL`.
 
 The deployed frontend lives at `https://<your-project>.vercel.app/` and the API lives under `https://<your-project>.vercel.app/api/...`.
