@@ -12,7 +12,6 @@
   @media (max-width: 639px) {
     #calendar-grid {
       @apply -mx-1.5;
-      background: rgba(251, 191, 36, 0.14);
     }
 
     #calendar-grid button[data-date] {

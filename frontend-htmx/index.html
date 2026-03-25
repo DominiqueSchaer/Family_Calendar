@@ -450,11 +450,13 @@
               isSelected ? 'ring-2 ring-indigo-500 border-indigo-500' : '',
               disabled ? 'cursor-not-allowed opacity-60' : '',
             ].filter(Boolean).join(' ');
+            const visibleBookings = day.bookings.slice(0, 3);
+            const hiddenBookingsCount = Math.max(day.bookings.length - visibleBookings.length, 0);
             const bookingsList = hasBookings
-              ? `<ul class="space-y-px">${day.bookings.slice(0, 1).map((booking) => {
+              ? `<ul class="space-y-px">${visibleBookings.map((booking) => {
                   const statusClass = ({ approved:'bg-emerald-100 text-emerald-700', confirmed:'bg-emerald-100 text-emerald-700', pending:'bg-amber-100 text-amber-700', declined:'bg-rose-100 text-rose-700', rejected:'bg-rose-100 text-rose-700' }[booking.status]) ?? 'bg-indigo-100 text-indigo-700';
                   return `<li class="calendar-booking-chip flex w-full items-center rounded-[3px] px-px py-px text-[9px] font-semibold leading-none sm:rounded-md sm:px-0.5 sm:py-0.5 sm:text-[11px] ${statusClass}"><span class="block w-full truncate">${booking.customerName}</span></li>`;
-                }).join('')}</ul>${day.bookings.length > 1 ? `<p class="text-[9px] leading-none text-slate-500 sm:text-[11px]">+${day.bookings.length - 1} more</p>` : ''}`
+                }).join('')}</ul>${hiddenBookingsCount > 0 ? `<p class="text-[9px] leading-none text-slate-500 sm:text-[11px]">+${hiddenBookingsCount} more</p>` : ''}`
               : '';
             let statusMessage = '';
             if (day.isUnavailable) statusMessage = '<p class="rounded px-0.5 py-px text-[9px] font-semibold leading-none text-slate-600 sm:rounded-md sm:px-1 sm:py-0.5 sm:text-[11px]">Off</p>';
