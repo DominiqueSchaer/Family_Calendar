@@ -17,4 +17,5 @@ frontend-htmx/node_modules/
 # OS
 .DS_Store
 Thumbs.db
+*:Zone.Identifier
 .vercel

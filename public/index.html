@@ -266,6 +266,7 @@
 
       const apiBaseMeta = document.querySelector('meta[name="api-base"]');
       const apiBaseOverride = new URLSearchParams(window.location.search).get('apiBase')
+        || window.localStorage.getItem('familyCalendar.apiBase')
         || window.localStorage.getItem('bookly.apiBase');
       const apiBase = (apiBaseOverride || apiBaseMeta?.content || '').replace(/\/+$/, '');
 

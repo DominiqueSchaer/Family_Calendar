@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 include = ["app*"]
 
 [project]
-name = "bookly"
+name = "family-calendar"
 version = "0.1.0"
-description = "FastAPI backend with HTMX frontend for booking management"
-authors = [{ name = "Bookly Team" }]
+description = "FastAPI backend with HTMX frontend for family booking management"
+authors = [{ name = "Dominique Schaer" }]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

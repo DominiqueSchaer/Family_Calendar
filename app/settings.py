@@ -5,9 +5,9 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(default="Bookly API", alias="APP_NAME")
+    app_name: str = Field(default="Family Calendar API", alias="APP_NAME")
     database_url: str = Field(
-        default="postgresql+asyncpg://postgres:postgres@localhost:5432/bookly",
+        default="postgresql+asyncpg://postgres:postgres@localhost:5432/family_calendar",
         alias="DATABASE_URL",
     )
 
