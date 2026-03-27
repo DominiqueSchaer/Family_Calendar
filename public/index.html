@@ -43,7 +43,7 @@
           <article class="space-y-3 rounded-xl border border-slate-200 bg-white p-2 shadow-sm sm:space-y-6 sm:p-6">
             <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <h2 class="text-base font-semibold text-slate-900 sm:text-xl">Availability</h2>
+                <h2 class="text-base font-semibold text-slate-900 sm:text-xl">Family Calendar</h2>
                 <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <p id="calendar-month-label" class="text-[11px] text-slate-500 sm:text-sm">—</p>
                   <p id="calendar-updated" class="text-[11px] text-slate-500 sm:text-sm">(Checking availability.)</p>
@@ -421,18 +421,17 @@
         const formatter = new Intl.DateTimeFormat('en-GB', {
           timeZone: 'Europe/Zurich',
           day: '2-digit',
-          month: 'short',
+          month: '2-digit',
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
           hour12: false,
-          timeZoneName: 'short',
         });
         const parts = Object.fromEntries(formatter.formatToParts(utcDate).map((part) => [part.type, part.value]));
-        if (!parts.day || !parts.month || !parts.year || !parts.hour || !parts.minute || !parts.timeZoneName) {
+        if (!parts.day || !parts.month || !parts.year || !parts.hour || !parts.minute) {
           return `(${label.trim()})`;
         }
-        return `(${parts.day} ${parts.month} ${parts.year} ${parts.hour}:${parts.minute} ${parts.timeZoneName})`;
+        return `(${parts.day}/${parts.month}/${parts.year} ${parts.hour}:${parts.minute})`;
       }
 
       function renderSummary(response) {
