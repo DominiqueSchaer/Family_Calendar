@@ -71,7 +71,7 @@
 
             <article class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:p-6">
               <header class="space-y-2">
-                <h2 class="text-lg font-semibold text-slate-900 sm:text-xl">New event</h2>
+                <h2 class="text-base font-semibold text-slate-900 sm:text-xl">New event</h2>
                 <p class="text-sm text-slate-500">Share details to add an event to the calendar.</p>
               </header>
               <div id="new-request-status" class="mt-4 hidden rounded-md border px-3 py-2 text-sm"></div>
@@ -468,7 +468,6 @@
               : '';
             let statusMessage = '';
             if (day.isUnavailable) statusMessage = '<p class="rounded px-0.5 py-px text-[9px] font-semibold leading-none text-slate-600 sm:rounded-md sm:px-1 sm:py-0.5 sm:text-[11px]">Off</p>';
-            else if (!hasBookings) statusMessage = '<p class="rounded px-0.5 py-px text-[9px] font-semibold leading-none text-slate-600 sm:rounded-md sm:px-1 sm:py-0.5 sm:text-[11px]">Free</p>';
             else if (day.isFull) statusMessage = '<p class="rounded px-0.5 py-px text-[9px] font-semibold leading-none text-rose-700 sm:rounded-md sm:px-1 sm:py-0.5 sm:text-[11px]">Full</p>';
 
             return `<button type="button" class="${classes}" data-date="${day.iso}" ${disabled ? 'disabled' : ''} ${isSelected ? 'aria-current="date"' : ''}>
@@ -521,13 +520,13 @@
                 const bookingId = booking?.id == null ? '' : String(booking.id);
                 const notes = booking.notes ? `<p class="mt-2 rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600">${escapeHtml(booking.notes)}</p>` : '';
                 return `<li class="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-                  <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div class="space-y-1">
-                      <p class="text-sm font-semibold text-slate-900">${escapeHtml(booking.customerName ?? 'Guest')}</p>
-                      <p class="text-xs text-slate-500">${escapeHtml(booking.windowLabel ?? '')}</p>
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-semibold text-slate-900">${escapeHtml(booking.customerName ?? 'Guest')}</p>
+                      <p class="truncate text-xs text-slate-500">${escapeHtml(booking.windowLabel ?? '')}</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${statusBadgeClass(booking.status)}">${escapeHtml(prettyStatus(booking.status))}</span>
+                    <div class="flex shrink-0 items-center gap-2">
+                      <span class="inline-flex whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold ${statusBadgeClass(booking.status)}">${escapeHtml(prettyStatus(booking.status))}</span>
                       <button type="button"
                               class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-base transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:ring-offset-1"
                               data-booking-remove="${escapeHtml(bookingId)}"
@@ -547,7 +546,7 @@
 
         panel.innerHTML = `
           <div class="space-y-4">
-            <p class="text-lg font-semibold text-slate-900">${escapeHtml(dateLabel)}</p>
+            <p class="text-base font-semibold text-slate-900 sm:text-xl">${escapeHtml(dateLabel)}</p>
             ${bookingsHtml}
           </div>
         `;
