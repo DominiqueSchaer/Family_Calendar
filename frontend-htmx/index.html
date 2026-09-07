@@ -256,6 +256,9 @@
         || window.localStorage.getItem('familyCalendar.apiBase')
         || window.localStorage.getItem('bookly.apiBase');
       const apiBase = (apiBaseOverride || apiBaseMeta?.content || '').replace(/\/+$/, '');
+      const CALENDAR_CACHE_VERSION = 1;
+      const CALENDAR_CACHE_PREFIX = 'familyCalendar.calendarCache.v1';
+      const CALENDAR_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
       function pad(n) { return String(n).padStart(2, '0'); }
       function formatMonthFromDate(d) { return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}`; }
@@ -315,6 +318,91 @@
 
       function resolveCurrentMonth() {
         return state.currentMonth || monthFromCalendar(state.response?.calendar) || formatMonthFromDate(new Date());
+      }
+
+      function calendarCacheKey(type, parts) {
+        return [CALENDAR_CACHE_PREFIX, apiBase || 'same-origin', type, ...parts].join(':');
+      }
+
+      function readCalendarCache(key) {
+        try {
+          const raw = window.localStorage.getItem(key);
+          if (!raw) return null;
+          const entry = JSON.parse(raw);
+          if (entry?.version !== CALENDAR_CACHE_VERSION || entry?.storedAt == null || entry?.payload == null) return null;
+          if (Date.now() - Number(entry.storedAt) > CALENDAR_CACHE_MAX_AGE_MS) {
+            window.localStorage.removeItem(key);
+            return null;
+          }
+          return clone(entry.payload);
+        } catch (error) {
+          console.warn('Ignoring unreadable calendar cache entry.', error);
+          return null;
+        }
+      }
+
+      function writeCalendarCache(key, payload) {
+        try {
+          window.localStorage.setItem(key, JSON.stringify({
+            version: CALENDAR_CACHE_VERSION,
+            storedAt: Date.now(),
+            payload,
+          }));
+        } catch (error) {
+          console.warn('Unable to update calendar cache.', error);
+        }
+      }
+
+      function clearCalendarCache() {
+        try {
+          const prefix = `${CALENDAR_CACHE_PREFIX}:`;
+          for (let i = window.localStorage.length - 1; i >= 0; i -= 1) {
+            const key = window.localStorage.key(i);
+            if (key?.startsWith(prefix)) window.localStorage.removeItem(key);
+          }
+        } catch (error) {
+          console.warn('Unable to clear calendar cache.', error);
+        }
+      }
+
+      function buildDayDetailFromCalendarDay(day) {
+        if (!day?.iso) return null;
+        const bookings = Array.isArray(day.bookings) ? day.bookings : [];
+        const pendingCount = day.pendingCount ?? bookings.filter((b) => b.status === 'pending').length;
+        const confirmedCount = bookings.filter((b) => b.status === 'confirmed' || b.status === 'approved').length;
+        return {
+          iso: day.iso,
+          dateLabel: formatDisplayDateFromIso(day.iso),
+          summary: bookings.length
+            ? 'Review guest details, confirm approvals, or release slots as needed.'
+            : 'Open day ready for a new event.',
+          confirmedCount,
+          pendingCount,
+          remainingSlots: day.remainingSlots ?? 0,
+          bookings,
+        };
+      }
+
+      function applyCalendarResponse(data, requestedMonth, selectedIso = null) {
+        state.response = clone(data);
+        if (selectedIso && state.response?.calendar) {
+          const selectedDay = state.response.calendar.weeks?.flat().find((day) => day.iso === selectedIso);
+          if (selectedDay) {
+            state.response.calendar.selectedIso = selectedIso;
+            state.response.selectedDay = buildDayDetailFromCalendarDay(selectedDay);
+          }
+        }
+        state.selectedDay = clone(state.response.selectedDay ?? null);
+        state.currentMonth = monthFromCalendar(data.calendar) ?? requestedMonth ?? resolveCurrentMonth();
+        state.dayCache = new Map();
+        if (state.selectedDay?.iso) state.dayCache.set(state.selectedDay.iso, clone(state.selectedDay));
+      }
+
+      function renderCalendarResponse() {
+        renderSummary(state.response);
+        renderCalendarGrid(state.response.calendar);
+        renderDayOverview(state.selectedDay);
+        renderPendingRequests();
       }
 
       async function api(path, options) {
@@ -561,6 +649,7 @@
             try {
               hideDayActionStatus();
               await api(`/bookings/${encodeURIComponent(bookingId)}`, { method: 'DELETE' });
+              clearCalendarCache();
               const currentDayIso = day?.iso ?? null;
               const resourceId = currentResourceId();
               if (currentDayIso) {
@@ -585,9 +674,20 @@
 
       async function selectDay(dateIso) {
         hideDayActionStatus();
+        const resourceId = currentResourceId();
+        const cacheKey = calendarCacheKey('day', [resourceId, dateIso]);
+        const cachedDetail = readCalendarCache(cacheKey);
+        if (cachedDetail) {
+          state.dayCache.set(dateIso, cachedDetail);
+          if (state.response?.calendar) state.response.calendar.selectedIso = dateIso;
+          state.selectedDay = clone(cachedDetail);
+          renderDayOverview(state.selectedDay);
+          renderCalendarGrid(state.response.calendar);
+        }
         try {
-          const detail = await api(`/calendar/day?date=${encodeURIComponent(dateIso)}`);
+          const detail = await api(`/calendar/day?date=${encodeURIComponent(dateIso)}&resourceId=${encodeURIComponent(resourceId)}`);
           state.dayCache.set(dateIso, detail);
+          writeCalendarCache(cacheKey, detail);
         } catch (error) {
           if (!state.dayCache.has(dateIso)) {
             console.warn('Falling back to cached day detail for', dateIso, error);
@@ -611,28 +711,37 @@
         if (targetResource) searchParams.set('resourceId', targetResource);
         const query = searchParams.toString();
         const path = query ? `/calendar?${query}` : '/calendar';
+        const cacheResource = targetResource || DEFAULT_RESOURCE_ID;
+        const cacheMonth = requestedMonth || selectedDate?.slice(0, 7) || formatMonthFromDate(new Date());
+        const cacheKey = calendarCacheKey('month', [cacheResource, cacheMonth]);
+        const cachedCalendar = readCalendarCache(cacheKey);
+        if (cachedCalendar) {
+          applyCalendarResponse(cachedCalendar, requestedMonth ?? cacheMonth, selectedDate ?? null);
+          renderCalendarResponse();
+        }
         try {
           const data = await api(path);
-          state.response = data;
-          state.selectedDay = data.selectedDay ?? null;
-          state.currentMonth = monthFromCalendar(data.calendar) ?? requestedMonth ?? resolveCurrentMonth();
-          state.dayCache = new Map();
-          if (state.selectedDay?.iso) state.dayCache.set(state.selectedDay.iso, clone(state.selectedDay));
+          applyCalendarResponse(data, requestedMonth ?? cacheMonth);
+          writeCalendarCache(cacheKey, data);
+          if (state.selectedDay?.iso) {
+            writeCalendarCache(calendarCacheKey('day', [currentResourceId(), state.selectedDay.iso]), state.selectedDay);
+          }
         } catch (error) {
-          console.warn('Using fallback calendar data because the API request failed.', error);
-          const inferredSelectedMonth = selectedDate ? selectedDate.slice(0, 7) : null;
-          const fallbackAnchor = parseMonthSlug(requestedMonth) ?? parseMonthSlug(inferredSelectedMonth) ?? new Date();
-          const anchorUTC = new Date(Date.UTC(fallbackAnchor.getUTCFullYear(), fallbackAnchor.getUTCMonth(), 1));
-          const { response: fallbackResp, dayDetails } = buildFallbackResponse(anchorUTC, new Date(), selectedDate ?? null);
-          state.response = fallbackResp;
-          state.selectedDay = clone(fallbackResp.selectedDay);
-          state.dayCache = new Map(Object.entries(dayDetails).map(([k, d]) => [k, clone(d)]));
-          state.currentMonth = monthFromCalendar(state.response.calendar) ?? formatMonthFromDate(anchorUTC);
+          if (!cachedCalendar) {
+            console.warn('Using fallback calendar data because the API request failed.', error);
+            const inferredSelectedMonth = selectedDate ? selectedDate.slice(0, 7) : null;
+            const fallbackAnchor = parseMonthSlug(requestedMonth) ?? parseMonthSlug(inferredSelectedMonth) ?? new Date();
+            const anchorUTC = new Date(Date.UTC(fallbackAnchor.getUTCFullYear(), fallbackAnchor.getUTCMonth(), 1));
+            const { response: fallbackResp, dayDetails } = buildFallbackResponse(anchorUTC, new Date(), selectedDate ?? null);
+            state.response = fallbackResp;
+            state.selectedDay = clone(fallbackResp.selectedDay);
+            state.dayCache = new Map(Object.entries(dayDetails).map(([k, d]) => [k, clone(d)]));
+            state.currentMonth = monthFromCalendar(state.response.calendar) ?? formatMonthFromDate(anchorUTC);
+          } else {
+            console.warn('Using cached calendar data because the API request failed.', error);
+          }
         }
-        renderSummary(state.response);
-        renderCalendarGrid(state.response.calendar);
-        renderDayOverview(state.selectedDay);
-        renderPendingRequests();
+        renderCalendarResponse();
       }
 
       function shiftMonth(offset) {
@@ -768,6 +877,7 @@
                 resourceId,
               }),
             });
+            clearCalendarCache();
             showNewRequestStatus('Event added to the calendar.', 'success');
             await loadCalendar({ month: startDateIso.slice(0, 7), selectedDate: startDateIso, resourceId });
             newRequestForm.reset();
